@@ -51,10 +51,10 @@ flowchart TD
 ## Demo Screenshots
 
 ### HTML Email Alert
-![FinOps Agent Email Alert](docs/email-alert.png)
+![FinOps Agent Email Alert](docs/email-alert.jpeg)
 
 ### CloudWatch Dashboard
-![CloudWatch Dashboard](docs/cloudwatch-dashboard.png)
+![CloudWatch Dashboard](docs/cloudwatch-dashboard.jpeg)
 
 ---
 
