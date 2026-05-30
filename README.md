@@ -6,38 +6,55 @@
 
 ## Architecture
 
+```mermaid
+flowchart TD
+    A([EventBridge Schedule\ndaily 8 AM UTC / 1:30 PM IST]) --> B
+
+    B[Lambda Function\nfinops-agent]
+    B --> C{EC2 State?}
+    C -->|stopped| D[Auto-start EC2]
+    C -->|running| E
+    D --> E
+
+    E[EC2 t3.micro\nfinops-demo]
+    E --> F[CloudWatch\nCPU Metrics 24h]
+    F --> G[FinOps Analysis Engine\nPython · boto3]
+
+    G --> H{CPU Status}
+    H -->|< 5%| I[UNDERUTILIZED\nStop off-hours]
+    H -->|5–20%| J[LOW UTILIZATION\nDownsize to t3.nano]
+    H -->|> 20%| K[NORMAL\nNo action]
+
+    I --> L[Generate Report]
+    J --> L
+    K --> L
+
+    L --> M[(S3 Bucket\nreport saved)]
+    L --> N[SES HTML Email\ndevopsprotest@gmail.com]
+    L --> O[Auto-stop EC2\ncost saving]
+
+    M --> P[Presigned URL\n7-day link]
+    N --> Q[View Full Report\nbutton in email]
+
+    style A fill:#1a1f2e,color:#fff
+    style B fill:#2d3450,color:#fff
+    style G fill:#2d3450,color:#fff
+    style I fill:#fde8e8,color:#c0392b
+    style J fill:#fff3e0,color:#e67e22
+    style K fill:#e8fdf0,color:#27ae60
+    style M fill:#e8f4fd,color:#2980b9
+    style N fill:#1a1f2e,color:#fff
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    INFRASTRUCTURE (Terraform)            │
-│                                                         │
-│   EventBridge Schedule                                  │
-│   (daily 8 AM UTC / 1:30 PM IST)                       │
-│           │                                             │
-│           ▼                                             │
-│   Lambda Function (finops-agent)                        │
-│           │                                             │
-│           ├── Auto-start EC2 (if stopped)               │
-│           │                                             │
-│           ▼                                             │
-│   EC2 t3.micro ──► CloudWatch Metrics                   │
-│   (finops-demo)     (CPU Utilization 24h)               │
-│                          │                              │
-│                          ▼                              │
-│                  FinOps Analysis Engine                  │
-│                  (Python - boto3)                        │
-│                          │                              │
-│           ┌──────────────┼──────────────┐               │
-│           ▼              ▼              ▼               │
-│      S3 Bucket     HTML Email      Auto-stop EC2        │
-│    (report saved)  (via SES)       (cost saving)        │
-│           │              │                              │
-│           ▼              ▼                              │
-│    Presigned URL   devopsprotest                        │
-│    (7-day link)    @gmail.com                           │
-│                                                         │
-│   CloudWatch Dashboard + Alarm (CPU < 5% trigger)       │
-└─────────────────────────────────────────────────────────┘
-```
+
+---
+
+## Demo Screenshots
+
+### HTML Email Alert
+![FinOps Agent Email Alert](docs/email-alert.png)
+
+### CloudWatch Dashboard
+![CloudWatch Dashboard](docs/cloudwatch-dashboard.png)
 
 ---
 
