@@ -1,0 +1,1 @@
+{"statusCode": 200, "body": "{\"instance_id\": \"i-05234ac9afff26bf7\", \"cpu_avg\": 3.97, \"status\": \"UNDERUTILIZED\", \"estimated_savings\": \"$1.33/month\", \"s3_report\": \"s3://finops-reports-143251063196/reports/report_20260530_081718.md\", \"ec2_auto_stopped\": false}"}
